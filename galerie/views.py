@@ -1,16 +1,24 @@
+# galerie/views.py
 from rest_framework import viewsets
-from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Image
 from .serializers import ImageSerializer
+from PIL import Image as PilImage
+from io import BytesIO
+from django.core.files.base import ContentFile
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-    parser_classes = (MultiPartParser, FormParser)
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        title = self.request.query_params.get('title')
-        if title:
-            queryset = queryset.filter(title__icontains=title)
-        return queryset
+    def perform_create(self, serializer):
+        image = serializer.save()
+        self.create_thumbnail(image)
+
+    def create_thumbnail(self, image):
+        original_image = PilImage.open(image.image_file)
+        thumbnail = original_image.resize((150, 150))
+        thumb_io = BytesIO()
+        thumbnail.save(thumb_io, format='JPEG')
+        thumb_file = ContentFile(thumb_io.getvalue(), name=f'thumb_{image.image_file.name}')
+        image.thumbnail.save(f'thumb_{image.image_file.name}', thumb_file)
+        image.save()
