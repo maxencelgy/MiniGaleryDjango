@@ -1,4 +1,3 @@
-# galerie/views.py
 from rest_framework import viewsets
 from .models import Image
 from .serializers import ImageSerializer
@@ -7,7 +6,7 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 
 class ImageViewSet(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
+    queryset = Image.objects.all().order_by('-upload_date')  # Ordre décroissant
     serializer_class = ImageSerializer
 
     def perform_create(self, serializer):
