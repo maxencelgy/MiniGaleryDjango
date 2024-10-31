@@ -34,14 +34,6 @@ Créez les tables de base de données :
 python manage.py makemigrations
 python manage.py migrate
   ```
-## Configurer Redis pour Celery :
-
-Assurez-vous que Redis est en cours d’exécution.
-Dans settings.py, configurez Celery pour utiliser Redis comme backend :
-  ```python
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-  ```
 
 ## Lancez le serveur de développement :
 
