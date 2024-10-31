@@ -41,12 +41,6 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## Démarrez le worker Celery :
-Démarrez le worker Celery :
-
-``` bash
-celery -A MiniGalerie worker -l info
-```
 
 ## Utilisation de l'API
 
